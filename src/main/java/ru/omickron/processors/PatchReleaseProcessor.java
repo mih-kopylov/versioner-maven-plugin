@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.logging.Log;
 import ru.omickron.VersionType;
+import ru.omickron.actions.CommitAction;
 import ru.omickron.actions.GetCurrentVersionAction;
 import ru.omickron.actions.SetVersionAction;
 import ru.omickron.model.Version;
@@ -16,6 +17,8 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
     private SetVersionAction setVersionAction;
     @Inject
     private GetCurrentVersionAction getCurrentVersionAction;
+    @Inject
+    private CommitAction commitAction;
 
     @Override
     @NonNull
@@ -27,7 +30,9 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
     @SneakyThrows
     public void process( @NonNull Log log ) {
         Version currentVersion = getCurrentVersionAction.get();
-        setVersionAction.set( currentVersion.incPatch().release() );
+        Version releaseVersion = currentVersion.incPatch().release();
+        setVersionAction.set( releaseVersion );
+        commitAction.commit( releaseVersion.toString() );
     }
 }
 
