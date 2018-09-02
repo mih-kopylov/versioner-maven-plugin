@@ -1,12 +1,11 @@
 package ru.omickron;
 
 import java.util.List;
+import javax.inject.Inject;
 import lombok.NonNull;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -16,19 +15,15 @@ import ru.omickron.processors.ReleaseProcessor;
 public class ReleaseMojo extends AbstractMojo {
     @Parameter(defaultValue = "PATCH", property = "type")
     private VersionType type;
-    @Component
+    @Inject
     private MavenProject mavenProject;
-    @Component
-    private PluginDescriptor pluginDescriptor;
-    @Component
+    @Inject
     private List<ReleaseProcessor> processors;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info( "type: " + type );
-        getLog().info(
-                String.format( "Processing project %s:%s:%s", mavenProject.getGroupId(), mavenProject.getArtifactId(),
-                        mavenProject.getVersion() ) );
+        getLog().info( String.format( "Processing %s operation on project %s:%s:%s", type, mavenProject.getGroupId(),
+                mavenProject.getArtifactId(), mavenProject.getVersion() ) );
         ReleaseProcessor processor = getProcessor( type );
         processor.process( getLog() );
     }
