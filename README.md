@@ -6,6 +6,7 @@ Assume the current project version is `1.2.3-SNAPSHOT`
 * `ru.omickron:versioner-maven-plugin:release -Dtype=PATCH`
   * change version to `1.2.3`
   * commit
+  * set a tag to the commit
   * change version to `1.2.4-SNAPSHOT`
   * commit
 * `versioner:release -Dtype=PATCH` - the same as above
@@ -14,6 +15,7 @@ Assume the current project version is `1.2.3-SNAPSHOT`
   * create a branch `release-1.3`
   * change version to `1.3.0`
   * commit 
+  * set a tag to the commit
   * change version to `1.3.1-SNAPSHOT`
   * commit
   * checkout the original branch
@@ -24,6 +26,7 @@ Assume the current project version is `1.2.3-SNAPSHOT`
   * create a branch `release-2.0`
   * change version to `2.0.0`
   * commit 
+  * set a tag to the commit
   * change version to `2.0.1-SNAPSHOT`
   * commit 
   * checkout the original branch
