@@ -9,6 +9,7 @@ import ru.omickron.VersionType;
 import ru.omickron.actions.CommitAction;
 import ru.omickron.actions.GetCurrentVersionAction;
 import ru.omickron.actions.SetVersionAction;
+import ru.omickron.actions.TagAction;
 import ru.omickron.model.Version;
 
 @Named
@@ -19,6 +20,8 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
     private GetCurrentVersionAction getCurrentVersionAction;
     @Inject
     private CommitAction commitAction;
+    @Inject
+    private TagAction tagAction;
 
     @Override
     @NonNull
@@ -33,6 +36,7 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
         Version releaseVersion = currentVersion.incPatch().release();
         setVersionAction.set( releaseVersion );
         commitAction.commit( releaseVersion.toString() );
+        tagAction.set( releaseVersion.toString() );
     }
 }
 
