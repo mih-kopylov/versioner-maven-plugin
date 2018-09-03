@@ -5,7 +5,6 @@ import javax.inject.Named;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.logging.Log;
-import ru.omickron.VersionType;
 import ru.omickron.actions.CommitAction;
 import ru.omickron.actions.GetCurrentVersionAction;
 import ru.omickron.actions.SetVersionAction;

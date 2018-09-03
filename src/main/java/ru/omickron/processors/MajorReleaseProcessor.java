@@ -5,7 +5,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import org.apache.maven.plugin.logging.Log;
-import ru.omickron.VersionType;
 import ru.omickron.actions.BranchAction;
 import ru.omickron.actions.CheckoutAction;
 import ru.omickron.actions.CommitAction;

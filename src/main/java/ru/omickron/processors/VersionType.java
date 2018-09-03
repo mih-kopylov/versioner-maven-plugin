@@ -1,4 +1,4 @@
-package ru.omickron;
+package ru.omickron.processors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

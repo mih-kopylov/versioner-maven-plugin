@@ -4,12 +4,11 @@ import java.util.List;
 import javax.inject.Inject;
 import lombok.NonNull;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import ru.omickron.processors.ReleaseProcessor;
+import ru.omickron.processors.VersionType;
 
 @Mojo(name = "release", aggregator = true)
 public class ReleaseMojo extends AbstractMojo {
@@ -21,7 +20,7 @@ public class ReleaseMojo extends AbstractMojo {
     private List<ReleaseProcessor> processors;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() {
         getLog().info( String.format( "Processing %s operation on project %s:%s:%s", type, mavenProject.getGroupId(),
                 mavenProject.getArtifactId(), mavenProject.getVersion() ) );
         ReleaseProcessor processor = getProcessor( type );
