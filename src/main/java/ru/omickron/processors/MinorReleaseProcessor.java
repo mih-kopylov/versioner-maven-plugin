@@ -9,7 +9,9 @@ import ru.omickron.VersionType;
 import ru.omickron.actions.BranchAction;
 import ru.omickron.actions.CheckoutAction;
 import ru.omickron.actions.CommitAction;
+import ru.omickron.actions.GetCurrentBranchAction;
 import ru.omickron.actions.GetCurrentVersionAction;
+import ru.omickron.actions.MergeAction;
 import ru.omickron.actions.SetVersionAction;
 import ru.omickron.actions.TagAction;
 import ru.omickron.model.Version;
@@ -29,6 +31,10 @@ public class MinorReleaseProcessor implements ReleaseProcessor {
     private BranchAction branchAction;
     @Inject
     private CheckoutAction checkoutAction;
+    @Inject
+    private GetCurrentBranchAction getCurrentBranchAction;
+    @Inject
+    private MergeAction mergeAction;
 
     @Override
     @NonNull
@@ -38,17 +44,22 @@ public class MinorReleaseProcessor implements ReleaseProcessor {
 
     @Override
     public void process( @NonNull Log log ) {
+        String originBranchName = getCurrentBranchAction.get();
+
         Version currentVersion = getCurrentVersionAction.get();
         Version releaseVersion = currentVersion.incMinor().release();
-        String branchName = "release-" + releaseVersion.getMajor() + "." + releaseVersion.getMinor();
-        branchAction.create( branchName );
-        checkoutAction.checkout( branchName );
+        String releaseBranchName = "release-" + releaseVersion.getMajor() + "." + releaseVersion.getMinor();
+        branchAction.create( releaseBranchName );
+        checkoutAction.checkout( releaseBranchName );
 
         setVersionAction.set( releaseVersion );
         commitAction.commit( releaseVersion.toString() );
         tagAction.set( releaseVersion.toString() );
-        Version nextVersion = releaseVersion.incMinor().snapshot();
+        Version nextVersion = releaseVersion.incPatch().snapshot();
         setVersionAction.set( nextVersion );
         commitAction.commit( nextVersion.toString() );
+
+        checkoutAction.checkout( originBranchName );
+        mergeAction.merge( releaseBranchName );
     }
 }
