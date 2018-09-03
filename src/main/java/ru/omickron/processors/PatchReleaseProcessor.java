@@ -37,7 +37,7 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
         setVersionAction.set( releaseVersion );
         commitAction.commit( releaseVersion.toString() );
         tagAction.set( releaseVersion.toString() );
-        Version nextVersion = releaseVersion.incMinor().snapshot();
+        Version nextVersion = releaseVersion.snapshot();
         setVersionAction.set( nextVersion );
         commitAction.commit( nextVersion.toString() );
     }
