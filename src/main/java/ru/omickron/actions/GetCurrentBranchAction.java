@@ -1,23 +1,27 @@
 package ru.omickron.actions;
 
-import java.io.File;
+import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoFailureException;
-import org.eclipse.jgit.api.Git;
+import ru.omickron.service.GitService;
 
 import static java.util.Objects.isNull;
 
 @Named
 public class GetCurrentBranchAction {
+    /**
+     * local branches names prefix
+     */
     private static final String PREFIX = "refs/heads/";
+    @Inject
+    private GitService gitService;
 
     @NonNull
     @SneakyThrows
     public String get() {
-        Git git = Git.open( new File( "./.git" ) );
-        String fullBranchName = git.getRepository().getFullBranch();
+        String fullBranchName = gitService.git().getRepository().getFullBranch();
         if (isNull( fullBranchName )) {
             throw new MojoFailureException( "No current branch found" );
         }

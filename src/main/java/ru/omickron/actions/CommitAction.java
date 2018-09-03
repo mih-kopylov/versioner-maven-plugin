@@ -1,30 +1,35 @@
 package ru.omickron.actions;
 
+import java.io.File;
 import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.BuildPluginManager;
-
-import static org.twdata.maven.mojoexecutor.MojoExecutor.configuration;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.element;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executeMojo;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.executionEnvironment;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.goal;
-import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.Status;
+import ru.omickron.service.GitService;
 
 @Named
 public class CommitAction {
+    private static final String SUFFIX = "pom.xml";
     @Inject
-    private MavenSession mavenSession;
-    @Inject
-    private BuildPluginManager buildPluginManager;
+    private GitService gitService;
 
     @SneakyThrows
     public void commit( @NonNull String message ) {
-        executeMojo( plugin( "org.apache.maven.plugins", "maven-scm-plugin", "1.10.0" ), goal( "checkin" ),
-                configuration( element( "basedir", "." ), element( "includes", "**/pom.xml" ),
-                        element( "message", message ) ), executionEnvironment( mavenSession, buildPluginManager ) );
+        Status status = gitService.git().status().call();
+        //add only poms to the commit as only they should be changed
+        status.getModified().stream().filter( o -> o.endsWith( SUFFIX ) ).forEach( this :: addFile );
+        gitService.git().commit().setMessage( message ).call();
+    }
+
+    @SneakyThrows
+    private void addFile( String o ) {
+        gitService.git().add().addFilepattern( o ).call();
+    }
+
+    @SneakyThrows
+    private Git createGit() {
+        return Git.open( new File( "./.git" ) );
     }
 }

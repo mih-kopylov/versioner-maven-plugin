@@ -1,16 +1,18 @@
 package ru.omickron.actions;
 
-import java.io.File;
+import javax.inject.Inject;
 import javax.inject.Named;
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import org.eclipse.jgit.api.Git;
+import ru.omickron.service.GitService;
 
 @Named
 public class BranchAction {
+    @Inject
+    private GitService gitService;
+
     @SneakyThrows
     public void create( @NonNull String branchName ) {
-        Git git = Git.open( new File( "./.git" ) );
-        git.branchCreate().setName( branchName ).call();
+        gitService.git().branchCreate().setName( branchName ).call();
     }
 }
