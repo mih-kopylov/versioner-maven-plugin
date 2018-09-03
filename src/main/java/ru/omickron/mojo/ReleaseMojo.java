@@ -1,4 +1,4 @@
-package ru.omickron;
+package ru.omickron.mojo;
 
 import java.util.List;
 import javax.inject.Inject;
