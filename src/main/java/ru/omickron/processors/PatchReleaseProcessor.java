@@ -33,11 +33,11 @@ public class PatchReleaseProcessor implements ReleaseProcessor {
     @SneakyThrows
     public void process( @NonNull Log log ) {
         Version currentVersion = getCurrentVersionAction.get();
-        Version releaseVersion = currentVersion.incPatch().release();
+        Version releaseVersion = currentVersion.release();
         setVersionAction.set( releaseVersion );
         commitAction.commit( releaseVersion.toString() );
         tagAction.set( releaseVersion.toString() );
-        Version nextVersion = releaseVersion.snapshot();
+        Version nextVersion = releaseVersion.incPatch().snapshot();
         setVersionAction.set( nextVersion );
         commitAction.commit( nextVersion.toString() );
     }
