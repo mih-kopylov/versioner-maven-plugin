@@ -23,7 +23,7 @@ public class MergeAction {
                 .include( branchObjectId )
                 .setFastForward( MergeCommand.FastForwardMode.FF_ONLY )
                 .call();
-        if (!result.getConflicts().isEmpty()) {
+        if (!result.getMergeStatus().isSuccessful()) {
             throw new MojoFailureException( String.format( "Can't merge branch '%s'", branchName ) );
         }
     }
