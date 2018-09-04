@@ -1,5 +1,7 @@
 # Versioner Maven Plugin
 
+[![Build Status](https://travis-ci.com/mih-kopylov/versioner-maven-plugin.svg)](https://travis-ci.com/mih-kopylov/versioner-maven-plugin)
+
 ## Usage
 Assume the current project version is `1.2.3-SNAPSHOT`
 
