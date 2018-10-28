@@ -12,7 +12,7 @@ Assume the current project version is `1.2.3-SNAPSHOT`
   * change version to `1.2.4-SNAPSHOT`
   * commit
 * `versioner:release -Dtype=PATCH` - the same as above
-* `versioner:release` - the same as above
+* `versioner:release` - the same as above, but requests `type` parameter. **This is a preferable usage scenario**
 * `versioner:release -Dtype=MINOR`
   * create a branch `release-1.3`
   * change version to `1.3.0`
