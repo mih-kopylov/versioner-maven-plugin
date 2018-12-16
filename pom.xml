@@ -14,6 +14,29 @@
     </properties>
     <packaging>maven-plugin</packaging>
 
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Another maven plugin for release management</description>
+    <url>https://github.com/mih-kopylov/versioner-maven-plugin</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Mikhail Kopylov</name>
+            <email>mih.kopylov@yandex.ru</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/mih-kopylov/versioner-maven-plugin.git</connection>
+        <url>https://github.com/mih-kopylov/versioner-maven-plugin/tree/master</url>
+    </scm>
+
     <dependencies>
         <!--maven-->
         <dependency>
