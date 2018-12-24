@@ -22,7 +22,7 @@ import static java.util.Objects.nonNull;
 
 @Mojo(name = "release", aggregator = true)
 public class ReleaseMojo extends AbstractMojo {
-    @Parameter
+    @Parameter(property = "operation")
     private String operationName;
     @Parameter
     private List<Operation> operations;
@@ -38,7 +38,8 @@ public class ReleaseMojo extends AbstractMojo {
     public void execute() {
         Map<String, Operation> operationMap = getOperationMap();
         if (isNull( operationName )) {
-            operationName = prompter.prompt( String.format( "Enter the operation: %s", operationMap.keySet() ) );
+            operationName =
+                    prompter.prompt( String.format( "Enter the operation: %s", operationMap.keySet() ), "patch" );
         }
         Operation operation = Objects.requireNonNull( operationMap.get( operationName.toLowerCase() ),
                 "No operation configured with name" );
