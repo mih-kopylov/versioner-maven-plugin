@@ -1,4 +1,4 @@
-package ru.omickron.exceptions;
+package ru.omickron.exception;
 
 import lombok.NonNull;
 
