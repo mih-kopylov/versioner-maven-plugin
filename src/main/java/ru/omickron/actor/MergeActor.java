@@ -1,8 +1,8 @@
-package ru.omickron.actions;
+package ru.omickron.actor;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Named;
-import lombok.NonNull;
 import lombok.SneakyThrows;
 import org.apache.maven.plugin.MojoFailureException;
 import org.eclipse.jgit.api.MergeCommand;
@@ -11,12 +11,13 @@ import org.eclipse.jgit.lib.ObjectId;
 import ru.omickron.service.GitService;
 
 @Named
-public class MergeAction {
+public class MergeActor implements Actor {
     @Inject
     private GitService gitService;
 
+    @Override
     @SneakyThrows
-    public void merge( @NonNull String branchName ) {
+    public String act( @Nullable String branchName ) {
         ObjectId branchObjectId = gitService.git().getRepository().resolve( branchName );
         MergeResult result = gitService.git()
                 .merge()
@@ -26,5 +27,6 @@ public class MergeAction {
         if (!result.getMergeStatus().isSuccessful()) {
             throw new MojoFailureException( String.format( "Can't merge branch '%s'", branchName ) );
         }
+        return null;
     }
 }
