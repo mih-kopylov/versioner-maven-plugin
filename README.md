@@ -39,6 +39,8 @@ Plugin supports custom operations configured in `pom.xml`. By default it has 3 o
 * minor
 * patch
 
+All operation and actor names are case-insensitive.
+
 It's possible to override these operations or add new ones in `pom.xml`. 
 
 ### Actors
