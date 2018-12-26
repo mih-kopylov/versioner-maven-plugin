@@ -81,6 +81,14 @@ It's possible to override these operations or add new ones in `pom.xml`.
   * input: branch name to merge
   * action: merges provided branch into the current one
   * output: null
+* rc1Version:
+  * input: version
+  * action: add `-RC1` suffix to version
+  * output: updated version
+* rc2Version:
+  * input: version
+  * action: add `-RC2` suffix to version
+  * output: updated version
 * releaseVersion:
   * input: version
   * action: removes all suffixes from version
