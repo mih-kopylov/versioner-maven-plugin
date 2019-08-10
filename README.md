@@ -5,7 +5,7 @@
 ## Usage
 Assume the current project version is `1.2.3-SNAPSHOT`
 
-* `ru.omickron:versioner-maven-plugin:release -Doperation=PATCH`
+* `ru.mihkopylov:versioner-maven-plugin:release -Doperation=PATCH`
   * change version to `1.2.3`
   * commit
   * set a tag to the commit
@@ -111,7 +111,7 @@ Here's default `major` operation configuration:
 
 ```xml
 <plugin>
-    <groupId>ru.omickron</groupId>
+    <groupId>ru.mihkopylov1ru.mihkopylov1</groupId>
     <artifactId>versioner-maven-plugin</artifactId>
     <version>LATEST</version>
     <configuration>
