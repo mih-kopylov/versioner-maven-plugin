@@ -214,7 +214,7 @@ To add a custom Actor definition need to add a `plugin/configuration/extraActors
 * code - the source code of the Actor. 
 
 Actor name may be unique, or may be equal to one of provided ones - in this case the new Actor will replace the provided one.
-Code should implement `ru.mihkopylov.actor.Actor` interface with a single method `public String act(String input);`
+Code should have a class named `Actor` that implements `ru.mihkopylov.actor.Actor` interface with a single method `public String act(String input);`
 
 Note, that Jython is sensitive to indentations, same as Python. 
 
