@@ -11,6 +11,8 @@ import javax.inject.Singleton;
 import lombok.NonNull;
 import org.apache.maven.plugin.logging.Log;
 import ru.mihkopylov.actor.Actor;
+import ru.mihkopylov.actor.extra.ExtraActor;
+import ru.mihkopylov.service.ExtraActorMapperService;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -18,27 +20,30 @@ import static java.util.stream.Collectors.toMap;
 @Singleton
 public class OperationProcessor {
     @Inject
+    private ExtraActorMapperService extraActorMapperService;
+    @Inject
     private List<Actor> actors;
 
-    public void run( @NonNull Log log, @NonNull Operation operation ) {
+    public void run( @NonNull Log log, @NonNull Operation operation, @NonNull List<ExtraActor> extraActors ) {
         log.info( "Running operation " + operation.getName() );
-        Map<String, Actor> actorMap = actors.stream().collect( toMap( this :: getActorName, Function.identity() ) );
+        Map<String, Actor> actorMap = actors.stream().collect( toMap( Actor :: getName, Function.identity() ) );
+        log.debug( "extra actors: " + extraActors );
+        actorMap.putAll( extraActors.stream()
+                .map( extraActorMapperService :: toActor )
+                .collect( toMap( Actor :: getName, Function.identity() ) ) );
+        log.debug( "actors: " + actorMap );
         Map<String, String> inputOutput = new HashMap<>();
         for (Action action : operation.getActions()) {
-            log.debug( "actor name = " + action.getActor() );
-            Actor actor = Objects.requireNonNull( actorMap.get( action.getActor().toLowerCase() ),
-                    "Can't find actor with name " + action.getActor() );
+            String actorName = action.getActor();
+            log.debug( "actor name = " + actorName );
+            Actor actor =
+                    Objects.requireNonNull( actorMap.get( actorName ), "Can't find actor with name " + actorName );
+            log.debug( "actor class = " + actor.getClass() );
             String input = inputOutput.get( action.getInput() );
             log.debug( "input = " + input );
             String output = actor.act( input );
-            log.info( String.format( "%s = %s(%s)", output, action.getActor(), input ) );
+            log.info( String.format( "%s = %s(%s)", output, actorName, input ) );
             inputOutput.put( action.getOutput(), output );
         }
-    }
-
-    @NonNull
-    private String getActorName( @NonNull Actor actor ) {
-        String className = actor.getClass().getSimpleName();
-        return className.substring( 0, className.length() - "actor".length() ).toLowerCase();
     }
 }

@@ -1,10 +1,12 @@
 package ru.mihkopylov.mojo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -13,6 +15,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.components.interactivity.Prompter;
+import ru.mihkopylov.actor.extra.ExtraActor;
 import ru.mihkopylov.operation.Action;
 import ru.mihkopylov.operation.Operation;
 import ru.mihkopylov.operation.OperationProcessor;
@@ -26,6 +29,8 @@ public class ReleaseMojo extends AbstractMojo {
     private String operationName;
     @Parameter
     private List<Operation> operations;
+    @Parameter
+    private List<ExtraActor> extraActors;
     @Inject
     private OperationProcessor operationProcessor;
     @Inject
@@ -45,7 +50,8 @@ public class ReleaseMojo extends AbstractMojo {
                 "No operation configured with name" );
         getLog().info( String.format( "Processing %s operation on project %s:%s:%s", operation.getName(),
                 mavenProject.getGroupId(), mavenProject.getArtifactId(), mavenProject.getVersion() ) );
-        operationProcessor.run( getLog(), operation );
+        operationProcessor.run( getLog(), operation,
+                Optional.ofNullable( extraActors ).orElse( Collections.emptyList() ) );
     }
 
     @NonNull

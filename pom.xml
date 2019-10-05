@@ -99,6 +99,14 @@
             <version>5.0.2.201807311906-r</version>
         </dependency>
 
+        <!--jython for scripting-->
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython-standalone</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+
+
         <!--test-->
         <dependency>
             <groupId>junit</groupId>
