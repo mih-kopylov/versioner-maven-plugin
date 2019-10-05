@@ -2,116 +2,130 @@
 
 [![Build Status](https://travis-ci.com/mih-kopylov/versioner-maven-plugin.svg)](https://travis-ci.com/mih-kopylov/versioner-maven-plugin)
 
-## Usage
-Assume the current project version is `1.2.3-SNAPSHOT`
+## Descripion
 
-* `ru.mihkopylov:versioner-maven-plugin:release -Doperation=PATCH`
-  * change version to `1.2.3`
-  * commit
-  * set a tag to the commit
-  * change version to `1.2.4-SNAPSHOT`
-  * commit
-* `versioner:release -Doperation=PATCH` - the same as above
-* `versioner:release` - the same as above, but requests `type` parameter. **This is a preferable usage scenario**
-* `versioner:release -Doperation=MINOR`
-  * create a branch `release-1.3`
-  * change version to `1.3.0`
-  * commit 
-  * set a tag to the commit
-  * change version to `1.3.1-SNAPSHOT`
-  * commit
-  * checkout the original branch
-  * merge `release-1.3` branch 
-* `versioner:release -Doperation=MAJOR`
-  * create a branch `release-2.0`
-  * change version to `2.0.0`
-  * commit 
-  * set a tag to the commit
-  * change version to `2.0.1-SNAPSHOT`
-  * commit 
-  * checkout the original branch
-  * merge `release-2.0` branch 
+The goal of `Versioner Maven Plugin` is to provide a flexible configurable way for release management with respect to [semantic versionig](https://semver.org)
+
+The idea is to describe each procedure as an actor, then combine those actors in a list and execute them one by one. 
+There's a shared context (of type `Map<String, String>`) so that actors commmunicate with each other with it.
+
+## Usage 
+
+Assume the current project version is `1.2.3-SNAPSHOT` and one need to do a minor release.
+
+In order to do that one need to:
+* create a release branch like `release-1.3`
+* change project version to `1.3.0`
+* make a commit
+* set `1.3.0` tag to that commit
+* change project version to `1.3.1-SNAPSHOT` - the snapshot version of next release
+* commit that version as well
+* checkout the original branch
+* merge release branch to the original branch
+
+All of that can be done via one of: 
+* `mvn ru.mihkopylov:versioner-maven-plugin:release -Doperation=minor`
+* `mvn versioner:release -Doperation=minor`
+* `mvn versioner:release`, and when `maven` requests a `type` parameter, type `minor`.
 
 ## Configuration
-Plugin supports custom operations configured in `pom.xml`. By default it has 3 operations:
+
+### Actors
+
+Each small action is executed by Actor. 
+There's a number of provided Actors.
+
+#### Git Actors
+
+* branch
+  * input: version
+  * description: create new branch using template `release-%MAJOR%.%MINOR%`
+  * output: created branch name
+* checkout:
+  * input: branch name
+  * description: checkout the branch
+  * output: branch name
+* commit:
+  * input: commit message
+  * description: commit current changes using commit message
+  * output: null
+* merge:
+  * input: branch name to merge
+  * description: merges provided branch into the current one
+  * output: null
+* tag:
+  * input: tag name
+  * description: set tag to current commit
+  * output: tag name
+* getCurrentBranch:
+  * input: null
+  * description: get current branch name
+  * output: current branch name
+
+#### Version Actors
+
+* getCurrentVersion:
+  * input: null
+  * description: get current version from pom.xml
+  * output: current version
+* setVersion:
+  * input: version
+  * description: sets provided version to `pom.xml`
+  * output: version
+* increaseMajorVersion:
+  * input: version
+  * description: increase major part of the version
+  * output: increased version
+* increaseMinorVersion:
+  * input: version
+  * description: increase minor part of the version
+  * output: increased version
+* increasePatchVersion:
+  * input: version
+  * description: increase patch part of the version
+  * output: increased version
+* rc1Version:
+  * input: version
+  * description: add `-RC1` suffix to version
+  * output: updated version
+* rc2Version:
+  * input: version
+  * description: add `-RC2` suffix to version
+  * output: updated version
+* snapshotVersion:
+  * input: version
+  * description: add `-SNAPSHOT` suffix to version
+  * output: updated version
+* releaseVersion:
+  * input: version
+  * description: removes all suffixes from version
+  * output: updated version
+
+### Operations
+
+List of Actors form an Operation. 
+There're some provided Operations: 
 
 * major
 * minor
 * patch
 
-All operation and actor names are case-insensitive.
+There's also ability to configure custom operations or override the provided ones.
 
-It's possible to override these operations or add new ones in `pom.xml`. 
+In order to configure a custom operation add a `plugin/configuration/operations/operation` block to your `pom.xml`.
 
-### Actors
+Operation contains of `name` and `actions`, which is a list of `action` blocks. 
+Each `action` has:
+* `actor` (required) which contains name of Actor
+* `input` (optional) which defines a name of context variable that will be passed as input to the Actor
+* `output` (optional) which defines a name of context variable that will keep the result of Actor execution.
 
-* branch
-  * input: version
-  * action: create new branch
-  * output: branch name
-* checkout:
-  * input: branch name
-  * action: checkout the branch
-  * output: branch name
-* commit:
-  * input: commit message
-  * action: commit current changes
-  * output: null
-* getCurrentBranch:
-  * input: null
-  * action: get current branch name
-  * output: current branch name
-* getCurrentVersion:
-  * input: null
-  * action: get current version from pom.xml
-  * output: current version
-* increaseMajorVersion:
-  * input: version
-  * action: increase major part of the version
-  * output: updated version
-* increaseMinorVersion:
-  * input: version
-  * action: increase minor part of the version
-  * output: updated version
-* increasePatchVersion:
-  * input: version
-  * action: increase patch part of the version
-  * output: updated version
-* merge:
-  * input: branch name to merge
-  * action: merges provided branch into the current one
-  * output: null
-* rc1Version:
-  * input: version
-  * action: add `-RC1` suffix to version
-  * output: updated version
-* rc2Version:
-  * input: version
-  * action: add `-RC2` suffix to version
-  * output: updated version
-* releaseVersion:
-  * input: version
-  * action: removes all suffixes from version
-  * output: updated version
-* setVersion:
-  * input: version
-  * action: sets current version to `pom.xml`
-  * output: version
-* snapshotVersion:
-  * input: version
-  * action: add `-SNAPSHOT` suffix to version
-  * output: updated version
-* tag:
-  * input: tag name
-  * action: set tag to current commit
-  * output: tag name
-
-### Example
+#### Example
 Here's default `major` operation configuration:
 
 ```xml
 <plugin>
-    <groupId>ru.mihkopylov1ru.mihkopylov1</groupId>
+    <groupId>ru.mihkopylov</groupId>
     <artifactId>versioner-maven-plugin</artifactId>
     <version>LATEST</version>
     <configuration>
@@ -187,6 +201,41 @@ Here's default `major` operation configuration:
                 </actions>
             </operation>
         </operations>
+    </configuration>
+</plugin>
+```
+
+### Custom Actors
+
+In order to provide even more flexibility, the plugin supports custom Actors that can be defined using [Jython](https://www.jython.org/) language, that a Java implementation of Python.
+
+To add a custom Actor definition need to add a `plugin/configuration/extraActors/extraActor` block which has:
+* name - the name of the Actor which it can be referred by in Operation definition
+* code - the source code of the Actor. 
+
+Actor name may be unique, or may be equal to one of provided ones - in this case the new Actor will replace the provided one.
+Code should have a class named `Actor` that implements `ru.mihkopylov.actor.Actor` interface with a single method `public String act(String input);`
+
+Note, that Jython is sensitive to indentations, same as Python. 
+
+Here's an example of such a definition that always returns a `0.0.0-SNAPSHOT` version.
+
+```xml
+<plugin>
+    <groupId>ru.mihkopylov</groupId>
+    <artifactId>versioner-maven-plugin</artifactId>
+    <version>LATEST</version>
+    <configuration>
+         <extraActors>
+             <extraActor>
+                 <name>increasePatchVersion</name>
+                 <code>from ru.mihkopylov.actor import Actor as ActorInterface
+ class Actor(ActorInterface):
+     def act(self, input):
+         return "0.0.0-SNAPSHOT"
+                 </code>
+             </extraActor>
+         </extraActors>
     </configuration>
 </plugin>
 ```
