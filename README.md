@@ -1,6 +1,7 @@
 # Versioner Maven Plugin
 
 [![Build Status](https://travis-ci.com/mih-kopylov/versioner-maven-plugin.svg)](https://travis-ci.com/mih-kopylov/versioner-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/ru.mihkopylov/versioner-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22ru.mihkopylov%22%20AND%20a:%22versioner-maven-plugin%22)
 
 ## Descripion
 
