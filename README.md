@@ -209,10 +209,15 @@ Here's default `major` operation configuration:
 
 ### Custom Actors
 
-In order to provide even more flexibility, the plugin supports custom Actors that can be defined using [Jython](https://www.jython.org/) language, that a Java implementation of Python.
+In order to provide even more flexibility, the plugin supports custom Actors that can be defined using different languages:
+* [Jython](https://www.jython.org/), that a Java implementation of Python.
+* [Groovy](https://https://groovy-lang.org/)
 
 To add a custom Actor definition need to add a `plugin/configuration/extraActors/extraActor` block which has:
 * name - the name of the Actor which it can be referred by in Operation definition
+* engine - the name of the language, one of:
+  * JYTHON
+  * GROOVY
 * code - the source code of the Actor. 
 
 Actor name may be unique, or may be equal to one of provided ones - in this case the new Actor will replace the provided one.
@@ -220,7 +225,7 @@ Code should have a class named `Actor` that implements `ru.mihkopylov.actor.Acto
 
 Note, that Jython is sensitive to indentations, same as Python. 
 
-Here's an example of such a definition that always returns a `0.0.0-SNAPSHOT` version.
+Here're examples of such a definition that always returns a `0.0.0-SNAPSHOT` version.
 
 ```xml
 <plugin>
@@ -230,11 +235,35 @@ Here's an example of such a definition that always returns a `0.0.0-SNAPSHOT` ve
     <configuration>
          <extraActors>
              <extraActor>
-                 <name>increasePatchVersion</name>
+                 <name>getCurrentVersion</name>
+                 <engine>JYTHON</engine>
                  <code>from ru.mihkopylov.actor import Actor as ActorInterface
  class Actor(ActorInterface):
      def act(self, input):
          return "0.0.0-SNAPSHOT"
+                 </code>
+             </extraActor>
+         </extraActors>
+    </configuration>
+</plugin>
+```
+
+```xml
+<plugin>
+    <groupId>ru.mihkopylov</groupId>
+    <artifactId>versioner-maven-plugin</artifactId>
+    <version>LATEST</version>
+    <configuration>
+         <extraActors>
+             <extraActor>
+                 <name>getCurrentVersion</name>
+                 <engine>GROOVY</engine>
+                 <code>import ru.mihkopylov.actor.Actor
+                    class MyActor implements Actor {
+                        def String act(String input) {
+                            return '0.0.0-SNAPSHOT'
+                        }
+                    }
                  </code>
              </extraActor>
          </extraActors>
