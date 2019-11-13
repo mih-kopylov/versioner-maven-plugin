@@ -9,6 +9,7 @@ public interface Actor {
 
     /**
      * By default gets class name in camelCase without `Actor` suffix
+     * @return name
      */
     @NonNull
     default String getName() {
