@@ -1,24 +1,21 @@
-package ru.mihkopylov.service;
+package ru.mihkopylov.actor.extra;
 
 import org.junit.Test;
 import ru.mihkopylov.actor.Actor;
-import ru.mihkopylov.actor.extra.ExtraActor;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExtraActorMapperServiceTest {
-    private final ExtraActorMapperService service = new ExtraActorMapperService();
-
+public class ExtraJythonActorTest {
     @Test
     public void testCustomActor() {
         //@formatter:off
-        ExtraActor extraActor = new ExtraActor( "actorName",
+        ExtraActor extraActor = new ExtraActor( "actorName", ExtraActorEngine.JYTHON,
                 "from ru.mihkopylov.actor import Actor as ActorInterface;\n"
                         + "class Actor(ActorInterface):\n"
                         + "    def act(self, input):\n"
                         + "        return \"0.0.0-SNAPSHOT\"\n\n" );
         //@formatter:on
-        Actor actor = service.toActor( extraActor );
+        Actor actor = extraActor.getEngine().createActor( extraActor );
         String actResult = actor.act( "1.2.3" );
         assertEquals( "0.0.0-SNAPSHOT", actResult );
     }
@@ -26,7 +23,7 @@ public class ExtraActorMapperServiceTest {
     @Test
     public void testCustomActorWithMoreThanOneMethod() {
         //@formatter:off
-        ExtraActor extraActor = new ExtraActor( "actorName",
+        ExtraActor extraActor = new ExtraActor( "actorName", ExtraActorEngine.JYTHON,
                 "from ru.mihkopylov.actor import Actor as ActorInterface;\n"
                         + "class Actor(ActorInterface):\n"
                         + "    def act(self, input):\n"
@@ -34,7 +31,7 @@ public class ExtraActorMapperServiceTest {
                         + "    def getValue(self):\n"
                         + "        return \"0.0.0-SNAPSHOT\"\n\n" );
         //@formatter:on
-        Actor actor = service.toActor( extraActor );
+        Actor actor = extraActor.getEngine().createActor( extraActor );
         String actResult = actor.act( "1.2.3" );
         assertEquals( "0.0.0-SNAPSHOT", actResult );
     }

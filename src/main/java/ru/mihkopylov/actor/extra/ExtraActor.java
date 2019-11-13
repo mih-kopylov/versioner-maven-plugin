@@ -16,6 +16,7 @@ public class ExtraActor {
     @NonNull
     private String name;
     @NonNull
+    private ExtraActorEngine engine = ExtraActorEngine.JYTHON;
+    @NonNull
     private String code;
-
 }

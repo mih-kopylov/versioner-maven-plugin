@@ -105,6 +105,18 @@
             <artifactId>jython-standalone</artifactId>
             <version>2.7.1</version>
         </dependency>
+        <!--groovy for scripting-->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>2.5.8</version>
+        </dependency>
+        <!--to support @Grab in groovy scripts-->
+        <dependency>
+            <groupId>org.apache.ivy</groupId>
+            <artifactId>ivy</artifactId>
+            <version>2.5.0</version>
+        </dependency>
 
 
         <!--test-->
