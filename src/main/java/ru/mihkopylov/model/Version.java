@@ -1,43 +1,46 @@
 package ru.mihkopylov.model;
 
-import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
+import ru.mihkopylov.exception.WrongSuffixFormatException;
+import ru.mihkopylov.exception.WrongVersionFormatException;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Getter
 @EqualsAndHashCode
 public class Version {
-    private static final String SUFFIXES =
-            Arrays.stream( Suffix.values() ).map( Suffix :: getValue ).collect( Collectors.joining( "|" ) );
-    private static final String REG = "(\\d+)\\.(\\d+)\\.(\\d+)(" + SUFFIXES + ")?";
+    private static final String SUFFIX_PATTERN = "[\\w-\\\\.]+";
+    private static final String VERSION_PATTERN = "(\\d+)\\.(\\d+)\\.(\\d+)(-(" + SUFFIX_PATTERN + "))?";
+    private static final String HYPHEN = "-";
     private final int major;
     private final int minor;
     private final int patch;
-    @NonNull
-    private final Suffix suffix;
+    @Nullable
+    private final String suffix;
 
     @NonNull
     public static Version parse( @NonNull String version ) {
-        Matcher matcher = Pattern.compile( REG ).matcher( version.trim() );
+        Matcher matcher = Pattern.compile( VERSION_PATTERN ).matcher( version.trim() );
         if (matcher.matches()) {
             int major = Integer.parseInt( matcher.group( 1 ) );
             int minor = Integer.parseInt( matcher.group( 2 ) );
             int patch = Integer.parseInt( matcher.group( 3 ) );
-            Suffix suffix = Suffix.parse( matcher.group( 4 ) );
+            String suffix = matcher.group( 5 );
             return new Version( major, minor, patch, suffix );
         }
-        throw new RuntimeException( String.format( "Wrong version format for '%s'", version ) );
+        throw new WrongVersionFormatException( version );
     }
 
     @Override
     public String toString() {
-        return major + "." + minor + "." + patch + suffix.getValue();
+        return major + "." + minor + "." + patch + Optional.ofNullable( suffix ).map( o -> HYPHEN + o ).orElse( "" );
     }
 
     @NonNull
@@ -57,21 +60,14 @@ public class Version {
 
     @NonNull
     public Version release() {
-        return new Version( major, minor, patch, Suffix.RELEASE );
+        return new Version( major, minor, patch, null );
     }
 
     @NonNull
-    public Version snapshot() {
-        return new Version( major, minor, patch, Suffix.SNAPSHOT );
-    }
-
-    @NonNull
-    public Version rc1() {
-        return new Version( major, minor, patch, Suffix.RC1 );
-    }
-
-    @NonNull
-    public Version rc2() {
-        return new Version( major, minor, patch, Suffix.RC2 );
+    public Version withSuffix( @NonNull String suffix ) {
+        if (!suffix.matches( SUFFIX_PATTERN )) {
+            throw new WrongSuffixFormatException( suffix );
+        }
+        return new Version( major, minor, patch, suffix );
     }
 }
