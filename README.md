@@ -41,7 +41,7 @@ There's a number of provided Actors.
 
 * branch
   * input: version
-  * description: create new branch using template `release-%MAJOR%.%MINOR%`
+  * description: create new branch using template `%PREFIX%%MAJOR%.%MINOR%`
   * output: created branch name
 * checkout:
   * input: branch name
@@ -121,6 +121,12 @@ Each `action` has:
 * `actor` (required) which contains name of Actor
 * `input` (optional) which defines a name of context variable that will be passed as input to the Actor
 * `output` (optional) which defines a name of context variable that will keep the result of Actor execution.
+
+### Customization
+
+Additional ability to customize version process
+
+* `releaseBranchPrefix` - prefix of the release branch created by `branch` actor. Default: `release-`.
 
 #### Example
 Here's default `major` operation configuration:
@@ -203,6 +209,7 @@ Here's default `major` operation configuration:
                 </actions>
             </operation>
         </operations>
+        <releaseBranchPrefix>rc-</releaseBranchPrefix>
     </configuration>
 </plugin>
 ```

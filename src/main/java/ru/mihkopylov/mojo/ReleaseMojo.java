@@ -16,6 +16,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.components.interactivity.Prompter;
 import ru.mihkopylov.actor.extra.ExtraActor;
+import ru.mihkopylov.model.Customization;
 import ru.mihkopylov.operation.Action;
 import ru.mihkopylov.operation.Operation;
 import ru.mihkopylov.operation.OperationProcessor;
@@ -31,12 +32,16 @@ public class ReleaseMojo extends AbstractMojo {
     private List<Operation> operations;
     @Parameter
     private List<ExtraActor> extraActors;
+    @Parameter(defaultValue = "release-", required = true)
+    private String releaseBranchPrefix;
     @Inject
     private OperationProcessor operationProcessor;
     @Inject
     private MavenProject mavenProject;
     @Inject
     private Prompter prompter;
+    @Inject
+    private Customization customization;
 
     @Override
     @SneakyThrows
@@ -48,8 +53,10 @@ public class ReleaseMojo extends AbstractMojo {
         }
         Operation operation = Objects.requireNonNull( operationMap.get( operationName.toLowerCase() ),
                 "No operation configured with name" );
+        customization.setReleaseBranchPrefix( releaseBranchPrefix );
         getLog().info( String.format( "Processing %s operation on project %s:%s:%s", operation.getName(),
                 mavenProject.getGroupId(), mavenProject.getArtifactId(), mavenProject.getVersion() ) );
+        getLog().debug( String.format( "Customization: %s", customization ) );
         operationProcessor.run( getLog(), operation,
                 Optional.ofNullable( extraActors ).orElse( Collections.emptyList() ) );
     }
