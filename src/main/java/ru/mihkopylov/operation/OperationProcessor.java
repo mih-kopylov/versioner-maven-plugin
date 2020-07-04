@@ -25,9 +25,7 @@ public class OperationProcessor {
         log.info( "Running operation " + operation.getName() );
         Map<String, Actor> actorMap = actors.stream().collect( toMap( Actor :: getName, Function.identity() ) );
         log.debug( "extra actors: " + extraActors );
-        actorMap.putAll( extraActors.stream()
-                .map( o -> o.getEngine().createActor( o ) )
-                .collect( toMap( Actor :: getName, Function.identity() ) ) );
+        extraActors.stream().map( o -> o.getEngine().createActor( o ) ).forEach( o -> actorMap.put( o.getName(), o ) );
         log.debug( "actors: " + actorMap );
         Map<String, String> inputOutput = new HashMap<>();
         for (Action action : operation.getActions()) {
