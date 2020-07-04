@@ -1,20 +1,21 @@
 package ru.mihkopylov.model;
 
 import org.junit.Test;
+import ru.mihkopylov.exception.WrongVersionFormatException;
 
 import static org.junit.Assert.assertEquals;
 
-public class VersionTest {
+public class Version_Parse_Test {
     @Test
     public void release() {
         Version version = Version.parse( "1.2.3" );
-        assertEquals( new Version( 1, 2, 3, Suffix.RELEASE ), version );
+        assertEquals( new Version( 1, 2, 3, null ), version );
     }
 
     @Test
     public void releaseWithEndingSpace() {
         Version version = Version.parse( "1.2.3 " );
-        assertEquals( new Version( 1, 2, 3, Suffix.RELEASE ), version );
+        assertEquals( new Version( 1, 2, 3, null ), version );
     }
 
     @Test
@@ -47,13 +48,25 @@ public class VersionTest {
         assertEquals( new Version( 1, 2, 3, Suffix.RC2 ), version );
     }
 
-    @Test(expected = RuntimeException.class)
-    public void unknownSuffix() {
-        Version.parse( "1.2.3-SUFFIX" );
+    @Test
+    public void preSuffixWithHyphen() {
+        Version version = Version.parse( "1.2.3-PART1-RC1" );
+        assertEquals( new Version( 1, 2, 3, "PART1-RC1" ), version );
     }
 
-    @Test(expected = RuntimeException.class)
-    public void twoSuffixes() {
-        Version.parse( "1.2.3-PART1-RC1" );
+    @Test
+    public void preSuffixWithDot() {
+        Version version = Version.parse( "1.2.3-PART1.RC1" );
+        assertEquals( new Version( 1, 2, 3, "PART1.RC1" ), version );
+    }
+
+    @Test(expected = WrongVersionFormatException.class)
+    public void noSuffix() {
+        Version.parse( "1.2.3-" );
+    }
+
+    @Test(expected = WrongVersionFormatException.class)
+    public void illegalSuffix() {
+        Version.parse( "1.2.3-S?UFFIX" );
     }
 }
