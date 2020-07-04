@@ -40,8 +40,8 @@ There's a number of provided Actors.
 #### Git Actors
 
 * branch
-  * input: version
-  * description: create new branch using template `%PREFIX%%MAJOR%.%MINOR%`
+  * input: branch name
+  * description: create a new branch
   * output: created branch name
 * checkout:
   * input: branch name
@@ -102,6 +102,10 @@ There's a number of provided Actors.
   * input: version
   * description: removes all suffixes from version
   * output: updated version
+* createReleaseBranchName:
+  * input: version
+  * description: create new branch using template `%PREFIX%%MAJOR%.%MINOR%`
+  * output: release branch name
 
 ### Operations
 
@@ -160,9 +164,13 @@ Here's default `major` operation configuration:
                         <output>releaseVersion</output>
                     </action>
                     <action>
-                        <actor>branch</actor>
+                        <actor>createReleaseBranchName</actor>
                         <input>releaseVersion</input>
                         <output>releaseBranch</output>
+                    </action>
+                    <action>
+                        <actor>branch</actor>
+                        <input>releaseBranch</input>
                     </action>
                     <action>
                         <actor>checkout</actor>
@@ -209,7 +217,7 @@ Here's default `major` operation configuration:
                 </actions>
             </operation>
         </operations>
-        <releaseBranchPrefix>rc-</releaseBranchPrefix>
+        <releaseBranchPrefix>release-</releaseBranchPrefix>
     </configuration>
 </plugin>
 ```

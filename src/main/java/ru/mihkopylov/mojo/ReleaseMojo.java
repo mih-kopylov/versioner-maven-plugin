@@ -91,7 +91,8 @@ public class ReleaseMojo extends AbstractMojo {
         actions.add( new Action( "getCurrentVersion", null, "currentVersion" ) );
         actions.add( new Action( "increaseMajorVersion", "currentVersion", "releaseVersion" ) );
         actions.add( new Action( "releaseVersion", "releaseVersion", "releaseVersion" ) );
-        actions.add( new Action( "branch", "releaseVersion", "releaseBranch" ) );
+        actions.add( new Action( "createReleaseBranchName", "releaseVersion", "releaseBranch" ) );
+        actions.add( new Action( "branch", "releaseBranch", null ) );
         actions.add( new Action( "checkout", "releaseBranch", null ) );
         actions.add( new Action( "setVersion", "releaseVersion", null ) );
         actions.add( new Action( "commit", "releaseVersion", null ) );
@@ -112,7 +113,8 @@ public class ReleaseMojo extends AbstractMojo {
         actions.add( new Action( "getCurrentVersion", null, "currentVersion" ) );
         actions.add( new Action( "increaseMinorVersion", "currentVersion", "releaseVersion" ) );
         actions.add( new Action( "releaseVersion", "releaseVersion", "releaseVersion" ) );
-        actions.add( new Action( "branch", "releaseVersion", "releaseBranch" ) );
+        actions.add( new Action( "createReleaseBranchName", "releaseVersion", "releaseBranch" ) );
+        actions.add( new Action( "branch", "releaseBranch", null ) );
         actions.add( new Action( "checkout", "releaseBranch", null ) );
         actions.add( new Action( "setVersion", "releaseVersion", null ) );
         actions.add( new Action( "commit", "releaseVersion", null ) );
