@@ -26,9 +26,9 @@ In order to do that one need to:
 * merge release branch to the original branch
 
 All of that can be done via one of: 
-* `mvn ru.mihkopylov:versioner-maven-plugin:release -Doperation=minor`
-* `mvn versioner:release -Doperation=minor`
-* `mvn versioner:release`, and when `maven` requests a `type` parameter, type `minor`.
+* `mvn ru.mihkopylov:versioner-maven-plugin:run -Doperation=minor`
+* `mvn versioner:run -Doperation=minor`
+* `mvn versioner:run`, and when `maven` requests a `type` parameter, type `minor`.
 
 ## Configuration
 
