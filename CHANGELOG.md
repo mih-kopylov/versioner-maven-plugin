@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased](https://github.com/mih-kopylov/versioner-maven-plugin/compare/3.2.0...HEAD)
 
+## [3.3.0](https://github.com/mih-kopylov/versioner-maven-plugin/compare/3.2.0...3.3.0) - 2020.07.04
+### Added
+- Ability to configure release branch prefix
+- Ability to create a branch from any provided name
+
+### Deprecated
+- `versioner:release` mojo is deprecated in favor of `versioner:run`
+
 ## [3.2.0](https://github.com/mih-kopylov/versioner-maven-plugin/compare/3.1.1...3.2.0) - 2019.11.13
 ### Added
 - Groovy scripting language
