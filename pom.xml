@@ -9,7 +9,7 @@
     <version>3.3.2-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.version>3.1.1</maven.version>
+        <maven.version>3.8.1</maven.version>
         <scm.version>1.9.4</scm.version>
     </properties>
     <packaging>maven-plugin</packaging>
